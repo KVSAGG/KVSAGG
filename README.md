@@ -12,14 +12,11 @@ In cifar10.sh we provided an example of how to run the program. The meaning of s
 | num_epochs         | total number of epochs                                                |
 | num_clients        | total number of clients                                               |
 | num_workers        | the number of clients participate each turn                           |
-| num_devices        | the number of gpus     
-|
+| num_devices        | the number of gpus                                                    |
 | num_rows, num_cols | in FetchSGD, it is used to set the sketch size to num_rows * num_cols |
 | k                  | sample size in local topk and our algorithm                           |
-| typ                | 0 for HyperIBLT; 1,2,3,4 for CS(1,3,10,0.5); 5,6,7,8 for CS(1,3,10,0.5)
-|
-| num_buckets        | the width of HyperIBLT 
-|
+| typ                | 0 for HyperIBLT; 1,2,3,4 for CS(1,3,10,0.5); 5,6,7,8 for CS(1,3,10,0.5)                                                                                  |
+| num_buckets        | the width of HyperIBLT                                                |
 
 
 For FEMNIST, because that we have the orignal data preprocessed into 3597 clients, so the num_clients is always equal to 3597. We run for only 1 epoch for FEMNIST.
