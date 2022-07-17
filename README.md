@@ -30,4 +30,4 @@ We implement HyperIBLT in C++ for CPU platforms and provide an example of comput
 
 
 ### References
-Codes in the Federated_learning folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area*(https://github.com/Arimase97/MinMax-Sampling) and Secure Aggregation implementation(https://github.com/ammartahir24/SecureAggregation). 
+Codes in the Federated_learning folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area* (https://github.com/Arimase97/MinMax-Sampling) and Secure Aggregation implementation (https://github.com/ammartahir24/SecureAggregation). 
