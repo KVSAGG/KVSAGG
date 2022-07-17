@@ -174,12 +174,12 @@ class TestCaseCUDA2(Base.CSVecTestCase):
 dd = 4000
 cc = 30000 # 2^19
 rr = 3
-IBLT = CSVec(dd, cc, rr)
-IBLT_arr = []
+HyperIBLT = CSVec(dd, cc, rr)
+HyperIBLT_arr = []
 for i in range(0,4):
-    IBLT_arr.append(CSVec(dd, cc, rr))
-print("IBLT initialization finished")
-class IBL_T(ctypes.Structure):
+    HyperIBLT_arr.append(CSVec(dd, cc, rr))
+print("HyperIBLT initialization finished")
+class HyperIBLT_T(ctypes.Structure):
     _fields_ = [("r",c_int),("c",c_int),("d",c_int),("id1",(c_int*cc)*rr),("fingerprint",(c_int*cc)*rr),("counter",(c_int*cc)*rr),("value",(c_double*cc)*rr),
     ("hash_fing",c_int*dd),("buckets",(c_int*dd)*rr)]
 class data(ctypes.Structure):
@@ -230,34 +230,34 @@ print(vec)
 cnt=0
 for v in vec:
     # print(v)
-    IBLT.accumulateVec(v)
+    HyperIBLT.accumulateVec(v)
     cnt+=1
 
 # cnt=0
 # for v in vec1:
 #     # print(v)
-#     IBLT.accumulateVec(v)
+#     HyperIBLT.accumulateVec(v)
 #     cnt+=1
 # cnt=0
 # for v in vec2:
 #     # print(v)
-#     IBLT.accumulateVec(v)
+#     HyperIBLT.accumulateVec(v)
 #     cnt+=1
-# print("IBLT id",IBLT.id)
-# print("IBLT finger",IBLT.fingerprint)
-# print("IBLT counter",IBLT.counter)
-# print("IBLT value",IBLT.value)
+# print("HyperIBLT id",HyperIBLT.id)
+# print("HyperIBLT finger",HyperIBLT.fingerprint)
+# print("HyperIBLT counter",HyperIBLT.counter)
+# print("HyperIBLT value",HyperIBLT.value)
 
 
 # id_arr=[]
 # for i in range(0,4):
-#     id_arr.append(IBLT_arr[i].id)
+#     id_arr.append(HyperIBLT_arr[i].id)
 # id_aggre = aggre(id_arr,rr,cc,4)
 # print("id_aggre",id_aggre)
 # id_sum=torch.zeros(rr,cc).to('cuda')
 # for k in range(0,4):
 #     # id_sum+=id_arr[k]
-#     id_sum+=IBLT_arr[k].id
+#     id_sum+=HyperIBLT_arr[k].id
 # print("id_sum",id_sum)
 # id_aggre -= id_sum
 # print(id_aggre.nonzero())
@@ -278,63 +278,63 @@ def Convert2DToCArray(TYPE,type1, ary):
 
 
 
-# def IBLT_and_aggre_GPU(grads, k, group_size):
+# def HyperIBLT_and_aggre_GPU(grads, k, group_size):
 #     # print("Inserting")
-#     # IBLT_arr = []
+#     # HyperIBLT_arr = []
 #     # for i in range(0,group_size):
-#     #     IBLT_arr.append(CSVec(dd, cc, rr))
+#     #     HyperIBLT_arr.append(CSVec(dd, cc, rr))
 #     cnt=0
-#     # IBLT_arr[0].accumulateVec(grads[0][:6568640])
-#     # print(IBLT_arr[0])
-#     # print(IBLT)
+#     # HyperIBLT_arr[0].accumulateVec(grads[0][:6568640])
+#     # print(HyperIBLT_arr[0])
+#     # print(HyperIBLT)
 #     for grad in grads:
-#         IBLT_arr[cnt].accumulateVec(grad[:6568640])
+#         HyperIBLT_arr[cnt].accumulateVec(grad[:6568640])
 #         cnt+=1
 
 #     id_arr=[]
 #     for i in range(0,group_size):
-#         id_arr.append(IBLT_arr[i].id)
+#         id_arr.append(HyperIBLT_arr[i].id)
 #     id_aggre = aggre(id_arr,rr,cc,group_size)
 #     # print("id_aggre",id_aggre)
 #     id_sum=torch.zeros(rr,cc).to('cuda')
 #     for k in range(0,group_size):
-#         id_sum+=IBLT_arr[i].id
+#         id_sum+=HyperIBLT_arr[i].id
 #     # print("id_sum",id_sum)
 #     id_aggre -= id_sum
 #     print(torch.nonzero(id_aggre))
 
-#     IBLT.zero()
+#     HyperIBLT.zero()
 #######################################################################
 dout = data()
-iblt = IBL_T()    
-id1=IBLT.id.cpu().numpy()
-iblt.id1 = Convert2DToCArray(c_int,int, id1)
+Hyperiblt = HyperIBLT_T()    
+id1=HyperIBLT.id.cpu().numpy()
+Hyperiblt.id1 = Convert2DToCArray(c_int,int, id1)
     # id1=list(map(int,id1))
-fingerprint=IBLT.fingerprint.cpu().numpy()
-iblt.fingerprint = Convert2DToCArray(c_int,int, fingerprint)
-counter=IBLT.counter.cpu().numpy()
-iblt.counter = Convert2DToCArray(c_int,int, counter)
-value=IBLT.value.cpu().numpy()
-iblt.value = Convert2DToCArray(c_double,float, value)
-hash_fing=IBLT.hash_fing.cpu().numpy().tolist()
+fingerprint=HyperIBLT.fingerprint.cpu().numpy()
+Hyperiblt.fingerprint = Convert2DToCArray(c_int,int, fingerprint)
+counter=HyperIBLT.counter.cpu().numpy()
+Hyperiblt.counter = Convert2DToCArray(c_int,int, counter)
+value=HyperIBLT.value.cpu().numpy()
+Hyperiblt.value = Convert2DToCArray(c_double,float, value)
+hash_fing=HyperIBLT.hash_fing.cpu().numpy().tolist()
 hash_fing=list(map(int,hash_fing))
-iblt.hash_fing = (c_int * len(hash_fing))(*hash_fing)
-buckets=IBLT.buckets.cpu().numpy()
-iblt.buckets = Convert2DToCArray(c_int,int, buckets)
+Hyperiblt.hash_fing = (c_int * len(hash_fing))(*hash_fing)
+buckets=HyperIBLT.buckets.cpu().numpy()
+Hyperiblt.buckets = Convert2DToCArray(c_int,int, buckets)
     # buckets=list(map(int,buckets))
-iblt.r = IBLT.r
-iblt.c = IBLT.c
-iblt.d = IBLT.d
+Hyperiblt.r = HyperIBLT.r
+Hyperiblt.c = HyperIBLT.c
+Hyperiblt.d = HyperIBLT.d
 
 # for i in range(0,rr):
 #     for j in range(0,cc):
-#         print(iblt.counter[i][j],end=' ')
+#         print(Hyperiblt.counter[i][j],end=' ')
 #     print('\n')
 
 
 # dll = ctypes.cdll.LoadLibrary('../c.so')
-# dll.DDecode(ctypes.byref(iblt), ctypes.byref(dout))
+# dll.DDecode(ctypes.byref(Hyperiblt), ctypes.byref(dout))
 # print("output_k:",dout.k)
-# IBLT.zero()
+# HyperIBLT.zero()
 
 #######################################################################

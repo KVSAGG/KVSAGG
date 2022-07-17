@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <queue>
 #include <cstring>
-#include "IBLT/fermat1.h"
+#include "HyperIBLT/func1.h"
 #include <fstream>
 #include <pthread.h>
 #include <ctime>
@@ -24,7 +24,7 @@ struct data{
 struct data_set{
     data din[10];
 };
-struct IBL_T{
+struct HyperIBLT_T{
     int r,c,d;
     uint32_t id1[rr][cc];
     uint32_t fingerprint[rr][cc];
@@ -37,7 +37,7 @@ extern "C"{
     Fermat** fermat = new Fermat*[100];
     void *deco(void *vargp){
 
-        IBL_T* ibl = ((IBL_T *)vargp);
+        HyperIBLT_T* ibl = ((HyperIBLT_T *)vargp);
         
         cout<<"lala1 ";
         Fermat ferm(ibl->r,ibl->c,ibl->id1,ibl->fingerprint,ibl->counter,ibl->value,ibl->hash_fing,ibl->buckets);
@@ -54,7 +54,7 @@ extern "C"{
         return NULL;
     }
 
-    void DDecode_all(IBL_T* iblts,data* res,int num){
+    void DDecode_all(HyperIBLT_T* HyperIBLTs,data* res,int num){
         ofstream err("./log.txt",ios::app);
         clock_t begin, endd;
         
@@ -66,7 +66,7 @@ extern "C"{
         for(int i=0;i<num;i++){
             myid[i]=i;
             // pthread_create(&tid[i],NULL,deco,&myid[i]);
-            pthread_create(&tid[i],NULL,deco,&iblts[i]);
+            pthread_create(&tid[i],NULL,deco,&HyperIBLTs[i]);
         }
         for(int i=0;i<num;i++){
             pthread_join(tid[i],NULL);
@@ -76,7 +76,7 @@ extern "C"{
 
         endd = clock();
         cout << "END: " << double(endd - begin) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
-        // Fermat ferm(iblt->r,iblt->c,iblt->id1,iblt->fingerprint,iblt->counter,iblt->value,iblt->hash_fing,iblt->buckets);
+        // Fermat ferm(HyperIBLT->r,HyperIBLT->c,HyperIBLT->id1,HyperIBLT->fingerprint,HyperIBLT->counter,HyperIBLT->value,HyperIBLT->hash_fing,HyperIBLT->buckets);
         err.close();
         return; 
     }
@@ -95,23 +95,23 @@ extern "C"{
 	}
 
     void ini_out(int ep){
-        string tp1 = "./result/ep"+to_string(ep)+"_IBLT_err.csv";
+        string tp1 = "./result/ep"+to_string(ep)+"_HyperIBLT_err.csv";
         string tp2 = "./result/ep"+to_string(ep)+"_CSke_err1.csv";
         string tp3 = "./result/ep"+to_string(ep)+"_CSke_err2.csv";
-        ofstream IBLTout(tp1);
+        ofstream HyperIBLTout(tp1);
         ofstream CSout(tp2);
         ofstream CSoutk(tp3);
-        IBLTout<<"cost,MAE,RMSE,"<<endl;
+        HyperIBLTout<<"cost,MAE,RMSE,"<<endl;
         CSout<<"cost,MAE,RMSE,"<<endl;
         CSoutk<<"cost,MAE,RMSE,"<<endl;
-        IBLTout.close();
+        HyperIBLTout.close();
         CSout.close();
         CSoutk.close();
     }
 
-    void DDecode(IBL_T* iblt,data* res, vt* ori_grad, vt* nz_bincount,int ep){
+    void DDecode(HyperIBLT_T* HyperIBLT,data* res, vt* ori_grad, vt* nz_bincount,int ep){
         
-        Fermat ferm(iblt->r,iblt->c,iblt->id1,iblt->fingerprint,iblt->counter,iblt->value,iblt->hash_fing,iblt->buckets);
+        Fermat ferm(HyperIBLT->r,HyperIBLT->c,HyperIBLT->id1,HyperIBLT->fingerprint,HyperIBLT->counter,HyperIBLT->value,HyperIBLT->hash_fing,HyperIBLT->buckets);
         unordered_map<uint32_t, vt> mp;
 
         clock_t begin, endd;
@@ -146,9 +146,9 @@ extern "C"{
                 cnt++;
             }
             res->k = cnt;
-            // cout<<"IBLT gross absolute error:"<<RMSE/6568640<<endl;
-            // cout<<"IBLT gross absolute error:"<<sqrt(RMSE/6568640)<<endl;
-            // IBLTout<<memcost<<","<<MAE/6568640<<","<<sqrt(RMSE/6568640)<<","<<endl;
+            // cout<<"HyperIBLT gross absolute error:"<<RMSE/6568640<<endl;
+            // cout<<"HyperIBLT gross absolute error:"<<sqrt(RMSE/6568640)<<endl;
+            // HyperIBLTout<<memcost<<","<<MAE/6568640<<","<<sqrt(RMSE/6568640)<<","<<endl;
         }else{
             double MAE=0,RMSE=0;
             for(int i=0;i<ep;i++){
@@ -159,22 +159,22 @@ extern "C"{
             }
             cout<<"CM Sketch gross absolute error:"<<RMSE/6568640<<endl;
             // cout<<"CM Sketch gross absolute error:"<<sqrt(RMSE/6568640)<<endl;
-            // IBLTout<<memcost<<","<<MAE/6568640<<","<<sqrt(RMSE/6568640)<<","<<endl;
+            // HyperIBLTout<<memcost<<","<<MAE/6568640<<","<<sqrt(RMSE/6568640)<<","<<endl;
             res->k = ep;
         }
 
 
         return; 
     }
-    void get_buckets(IBL_T* iblt){
+    void get_buckets(HyperIBLT_T* HyperIBLT){
         Fermat fer;
         for(int i=0;i<rr;i++){
             for(int j=0;j<dd;j++){
-                iblt->buckets[i][j]= fer.hash[i].run((char*)&j, sizeof(uint32_t)) % cc;
+                HyperIBLT->buckets[i][j]= fer.hash[i].run((char*)&j, sizeof(uint32_t)) % cc;
             }  
         }
         for(int j=0;j<dd;j++){
-            iblt->hash_fing[j]= fer.hash_fp->run((char*)&j, sizeof(uint32_t)) % 1048573;
+            HyperIBLT->hash_fing[j]= fer.hash_fp->run((char*)&j, sizeof(uint32_t)) % 1048573;
         }
     }
     

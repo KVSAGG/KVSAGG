@@ -29,24 +29,23 @@ cc = 300000
 rr = 3
 
 
-numIBLT = 0
+numHyperIBLT = 0
 numCS = 0
 numCSk = 0
 CS = 0
 CSk = 0
-IBLT = 0
-IBLT_arr = []
+HyperIBLT = 0
+HyperIBLT_arr = []
 
 dll2 = ctypes.cdll.LoadLibrary('./c.so')
 
 
 
-print("IBLT initialization finished")
-class IBL_T(ctypes.Structure):
+class HyperIBLT_T(ctypes.Structure):
     _fields_ = [("r",c_int),("c",c_int),("d",c_int),("id1",(c_int*cc)*rr),("fingerprint",(c_int*cc)*rr),("counter",(c_int*cc)*rr),("value",(c_double*cc)*rr),
     ("hash_fing",c_int*dd),("buckets",(c_int*dd)*rr)]
 
-# iblts = (IBL_T*30)()
+# HyperIBLTs = (HyperIBLT_T*30)()
 
 class data_set(ctypes.Structure):
     _fields_ = [("din",data * 10)]
@@ -86,7 +85,7 @@ def worker_loop(input_model, ps_weights, client_weights, client_errors,
     global numCS,numCSk,CS,CSk
     model = input_model.to(args.device)
     if args.typ==0:
-        numIBLT = int(args.num_buckets)
+        numHyperIBLT = int(args.num_buckets)
     if args.typ==1 or args.typ==5:
         numCS = int(args.num_buckets*12.25/8)
         numCSk = int((args.num_buckets*12.25*3-args.k*4)/8/3)
@@ -104,7 +103,7 @@ def worker_loop(input_model, ps_weights, client_weights, client_errors,
 
     if args.typ==0:
         for i in range(0,4):
-            IBLT_arr.append(CSVec(dd, numIBLT, rr))
+            HyperIBLT_arr.append(CSVec(dd, numHyperIBLT, rr))
     if args.typ==1 or args.typ==2 or args.typ==3 or args.typ==4:
         CS = CSVec(dd, numCS, rr)
     if args.typ==5 or args.typ==6 or args.typ==7 or args.typ==8:
@@ -248,7 +247,7 @@ def worker_loop(input_model, ps_weights, client_weights, client_errors,
                     elif args.typ==5 or args.typ==6 or args.typ==7 or args.typ==8:
                         sum_g += CSk_compress(grads,args)
                     elif args.typ==0:
-                        sum_g += IBLT_compress(grads,dd,group_size)
+                        sum_g += HyperIBLT_compress(grads,dd,group_size)
                     grads = []
                 cnt = (cnt+1)%group_size
                 
@@ -274,12 +273,12 @@ def worker_loop(input_model, ps_weights, client_weights, client_errors,
         ################################################################################
 
 
-def IBLT_compress(grads,lenth,group_size):
+def HyperIBLT_compress(grads,lenth,group_size):
     ori_grad = torch.zeros(dd).to('cuda')
     cnt=0
     for grad in grads:
-        IBLT_arr[cnt].zero()
-        IBLT_arr[cnt].accumulateVec(grad[:dd])
+        HyperIBLT_arr[cnt].zero()
+        HyperIBLT_arr[cnt].accumulateVec(grad[:dd])
         ori_grad+=grad[:dd]
         cnt+=1
 
@@ -288,10 +287,10 @@ def IBLT_compress(grads,lenth,group_size):
     counter_arr=[]
     value_arr=[]
     for i in range(0,group_size):
-        id_arr.append(IBLT_arr[i].id)
-        fingerprint_arr.append(IBLT_arr[i].fingerprint)
-        counter_arr.append(IBLT_arr[i].counter)
-        value_arr.append(IBLT_arr[i].value)
+        id_arr.append(HyperIBLT_arr[i].id)
+        fingerprint_arr.append(HyperIBLT_arr[i].fingerprint)
+        counter_arr.append(HyperIBLT_arr[i].counter)
+        value_arr.append(HyperIBLT_arr[i].value)
 
 
     print("aggregate start",end=" ")
@@ -303,7 +302,7 @@ def IBLT_compress(grads,lenth,group_size):
 
     print("aggregate end")
     dout = data()
-    iblt = IBL_T()
+    HyperIBLT = HyperIBLT_T()
     
             
     nz = ori_grad.nonzero()
@@ -315,28 +314,28 @@ def IBLT_compress(grads,lenth,group_size):
     nz_bincount = nz_bincount.cpu().numpy().tolist()
     nz_bincount = (c_double * len(nz_bincount))(*nz_bincount)
 
-        # print(IBLT.counter)
+        # print(HyperIBLT.counter)
     id1=id_aggre.to('cpu').numpy()
-    iblt.id1 = Convert2DToCArray(c_int,int, id1, cc)
+    HyperIBLT.id1 = Convert2DToCArray(c_int,int, id1, cc)
         # id1=list(map(int,id1))
     fingerprint=fingerprint_aggre.cpu().numpy()
-    iblt.fingerprint = Convert2DToCArray(c_int,int, fingerprint, cc)
+    HyperIBLT.fingerprint = Convert2DToCArray(c_int,int, fingerprint, cc)
     counter=counter_aggre.cpu().numpy()
-    iblt.counter = Convert2DToCArray(c_int,int, counter, cc)
+    HyperIBLT.counter = Convert2DToCArray(c_int,int, counter, cc)
     value=value_aggre.cpu().numpy()
-    iblt.value = Convert2DToCArray(c_double,float, value, cc)
-    hash_fing=IBLT_arr[0].hash_fing.cpu().numpy().tolist()
+    HyperIBLT.value = Convert2DToCArray(c_double,float, value, cc)
+    hash_fing=HyperIBLT_arr[0].hash_fing.cpu().numpy().tolist()
     hash_fing=list(map(int,hash_fing))
-    iblt.hash_fing = (c_int * len(hash_fing))(*hash_fing)
-    buckets=IBLT_arr[0].buckets.cpu().numpy()
-    iblt.buckets = Convert2DToCArray(c_int,int, buckets, dd)
+    HyperIBLT.hash_fing = (c_int * len(hash_fing))(*hash_fing)
+    buckets=HyperIBLT_arr[0].buckets.cpu().numpy()
+    HyperIBLT.buckets = Convert2DToCArray(c_int,int, buckets, dd)
 
         # buckets=list(map(int,buckets))
-    iblt.r = IBLT_arr[0].r
-    iblt.c = IBLT_arr[0].c
-    iblt.d = IBLT_arr[0].d
+    HyperIBLT.r = HyperIBLT_arr[0].r
+    HyperIBLT.c = HyperIBLT_arr[0].c
+    HyperIBLT.d = HyperIBLT_arr[0].d
     dll = ctypes.cdll.LoadLibrary('./c.so')
-    dll.DDecode(ctypes.byref(iblt), ctypes.byref(dout),ori_grad,nz_bincount,lenth)
+    dll.DDecode(ctypes.byref(HyperIBLT), ctypes.byref(dout),ori_grad,nz_bincount,lenth)
     # print("output_k:",dout.k)
 
     idx = np.frombuffer(dout.idx, dtype=np.int32)

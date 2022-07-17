@@ -11,7 +11,7 @@ dd = 6568640
 cc = 2001
 rr = 3
 
-class IBL_T(ctypes.Structure):
+class HyperIBLT_T(ctypes.Structure):
     _fields_ = [("r",c_int),("c",c_int),("d",c_int),("id1",(c_int*cc)*rr),("fingerprint",(c_int*cc)*rr),("counter",(c_int*cc)*rr),("value",(c_double*cc)*rr),
     ("hash_fing",c_int*dd),("buckets",(c_int*dd)*rr)]
 
@@ -169,7 +169,7 @@ class CSVec(object):
         self.buckets =(( hashes ) % self.c).long()
 
 # buckets from c
-        # iblt1 = IBL_T()    
+        # iblt1 = HyperIBLT_T()    
         # # dll = ctypes.cdll.LoadLibrary('../c.so')
         # dll = ctypes.cdll.LoadLibrary('./c.so')
         # dll.get_buckets(ctypes.byref(iblt1))
