@@ -18,7 +18,7 @@ In cifar10.sh we provided an example of how to run the program. The meaning of s
 | k                  | sample size in local topk and our algorithm                           |
 | typ                | 0 for HyperIBLT; 1,2,3,4 for CS(1,3,10,0.5); 5,6,7,8 for CS(1,3,10,0.5)
 |
-| num_buckets        | the bucket number of one array in HyperIBLT 
+| num_buckets        | the width of HyperIBLT 
 |
 
 
