@@ -161,7 +161,7 @@ def parse_args(default_lr=None):
 
     # compression args
     parser.add_argument("--k", type=int, default=50000)
-    parser.add_argument("--numIBLT", type=int, default=50000)
+    parser.add_argument("--num_buckets", type=int, default=50000)
     parser.add_argument("--typ", type=int, default=0)
     parser.add_argument("--compress", type=int, default=30)
     parser.add_argument("--num_cols", type=int, default=500000)

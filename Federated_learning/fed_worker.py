@@ -86,19 +86,19 @@ def worker_loop(input_model, ps_weights, client_weights, client_errors,
     global numCS,numCSk,CS,CSk
     model = input_model.to(args.device)
     if args.typ==0:
-        numIBLT = int(args.numIBLT)
+        numIBLT = int(args.num_buckets)
     if args.typ==1 or args.typ==5:
-        numCS = int(args.numIBLT*12.25/8)
-        numCSk = int((args.numIBLT*12.25*3-args.k*4)/8/3)
+        numCS = int(args.num_buckets*12.25/8)
+        numCSk = int((args.num_buckets*12.25*3-args.k*4)/8/3)
     if args.typ==2 or args.typ==6:
-        numCS = int(3*args.numIBLT*12.25/8)
-        numCSk = int((3*args.numIBLT*12.25*3-args.k*4)/8/3)
+        numCS = int(3*args.num_buckets*12.25/8)
+        numCSk = int((3*args.num_buckets*12.25*3-args.k*4)/8/3)
     if args.typ==3 or args.typ==7:
-        numCS = int(10*args.numIBLT*12.25/8)
-        numCSk = int((10*args.numIBLT*12.25*3-args.k*4)/8/3)
+        numCS = int(10*args.num_buckets*12.25/8)
+        numCSk = int((10*args.num_buckets*12.25*3-args.k*4)/8/3)
     if args.typ==4 or args.typ==8:
-        numCS = int(0.5*args.numIBLT*12.25/8)
-        numCSk = int((0.5*args.numIBLT*12.25*3-args.k*4)/8/3)
+        numCS = int(0.5*args.num_buckets*12.25/8)
+        numCSk = int((0.5*args.num_buckets*12.25*3-args.k*4)/8/3)
     
     
 

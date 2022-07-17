@@ -21,10 +21,10 @@ using namespace chrono;
 
 int aaa[4]={10000,100000,1000000,10000000};
 
-string bbb[3]={"IBLT","CS","CSK"};
+string bbb[3]={"HyperIBLT","CS","CSK"};
 int main(){
         
-    for(int j=0;j<3;j++){
+    for(int j=0;j<1;j++){
         string tp1 = "./speed_data/"+bbb[j]+".csv";
         ofstream fout(tp1);
         fout<<"data,insert,decode,"<<endl;
