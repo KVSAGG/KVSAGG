@@ -2,7 +2,7 @@
 
 ## Federated Learning
 
-Codes in this folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area*. We apply our KVSAgg after the sampling process in a GPU friendly way.
+We apply our KVSAgg in a GPU friendly way after the sampling process in Federated Learning.
 
 In cifar10.sh we provided an example of how to run the program. The meaning of some of the arguments are provided in the chart below: 
 
@@ -22,6 +22,12 @@ In cifar10.sh we provided an example of how to run the program. The meaning of s
 For FEMNIST, because that we have the orignal data preprocessed into 3597 clients, so the num_clients is always equal to 3597. We run for only 1 epoch for FEMNIST.
 
 
+
 ## HyperIBLT
 
 We implement HyperIBLT in C++ for CPU platforms and provide an example of computing the encoding and decoding efficiency of HyperIBLT.
+
+
+
+
+Codes in the Federated_learning folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area*(https://github.com/Arimase97/MinMax-Sampling) and Secure Aggregation implementation(https://github.com/ammartahir24/SecureAggregation). 
