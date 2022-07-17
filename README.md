@@ -2,7 +2,7 @@
 
 ## Federated Learning
 
-We implement our KVSAgg in a GPU friendly way and apply it after the sampling process in Federated Learning.
+We implement our KVSAgg in a GPU friendly way and apply it in Federated Learning.
 
 In cifar10.sh we provided an example of how to run the program. The meaning of some of the arguments are provided in the chart below: 
 
