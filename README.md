@@ -24,4 +24,4 @@ For FEMNIST, because that we have the orignal data preprocessed into 3597 client
 
 ## HyperIBLT
 
-We implement HyperIBLT in C++ for CPU platforms and provide an example for computing the encoding and decoding efficiency of HyperIBLT.
+We implement HyperIBLT in C++ for CPU platforms and provide an example of computing the encoding and decoding efficiency of HyperIBLT.
