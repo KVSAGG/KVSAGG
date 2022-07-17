@@ -2,7 +2,7 @@
 
 ## Federated Learning
 
-Codes in this folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area*. We apply our KVSAgg after the sampling process in a GPU friendly way to evaluate performance.
+Codes in this folder are forked from open source code of *MinMax Sampling: A Near-optimal Global Summary for Aggregation in the Wide Area*. We apply our KVSAgg after the sampling process in a GPU friendly way.
 
 In cifar10.sh we provided an example of how to run the program. The meaning of some of the arguments are provided in the chart below: 
 
